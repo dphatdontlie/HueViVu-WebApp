@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { logger } from '@/lib/logger';
 
 export async function GET(req: NextRequest) {
   try {
@@ -30,6 +31,7 @@ export async function GET(req: NextRequest) {
       }
     });
   } catch (err: any) {
-    return new Response(err.message, { status: 500 });
+    logger.error('TTS synthesis error', { error: err?.message });
+    return new Response('Không thể tạo âm thanh do lỗi hệ thống.', { status: 500 });
   }
 }

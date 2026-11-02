@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth';
+import { logger } from '@/lib/logger';
 
 export async function GET(req: NextRequest) {
   try {
@@ -23,8 +24,8 @@ export async function GET(req: NextRequest) {
     const examples = db.prepare(query).all(...params);
     return Response.json(examples);
   } catch (error: any) {
-    console.error('Error fetching training examples:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    logger.error('Error fetching training examples', { error: error?.message });
+    return Response.json({ error: 'Không thể tải dữ liệu huấn luyện do lỗi hệ thống.' }, { status: 500 });
   }
 }
 
@@ -52,7 +53,7 @@ export async function POST(req: NextRequest) {
 
     return Response.json({ id, message: 'Created successfully' }, { status: 201 });
   } catch (error: any) {
-    console.error('Error creating training example:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    logger.error('Error creating training example', { error: error?.message });
+    return Response.json({ error: 'Không thể tạo dữ liệu huấn luyện do lỗi hệ thống.' }, { status: 500 });
   }
 }

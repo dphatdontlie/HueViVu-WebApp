@@ -4,6 +4,7 @@ import { getDb } from '@/lib/db';
 import { parsePlaceRow, preparePlacePayload } from '@/lib/place-data';
 import { requireAdmin, requireRoles } from '@/lib/auth';
 import { writeAudit } from '@/lib/audit';
+import { logger } from '@/lib/logger';
 
 export async function GET(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   const params = await context.params;
@@ -60,8 +61,8 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
 
     return Response.json({ message: 'Updated successfully' });
   } catch (error: any) {
-    console.error('Error updating place:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    logger.error('Error updating place', { error: error?.message, placeId: params.id });
+    return Response.json({ error: 'Không thể cập nhật địa điểm do lỗi hệ thống.' }, { status: 500 });
   }
 }
 
@@ -78,7 +79,7 @@ export async function DELETE(req: NextRequest, context: { params: Promise<{ id: 
     writeAudit(db, { actorId: admin.userId, action: 'delete', entityType: 'place', entityId: params.id, before });
     return Response.json({ message: 'Deleted successfully' });
   } catch (error: any) {
-    console.error('Error deleting place:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    logger.error('Error deleting place', { error: error?.message, placeId: params.id });
+    return Response.json({ error: 'Không thể xóa địa điểm do lỗi hệ thống.' }, { status: 500 });
   }
 }

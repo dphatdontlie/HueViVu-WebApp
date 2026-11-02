@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getAuthUserId } from '@/lib/auth';
 import { suggestTripInsertion } from '@/lib/trip-insertion';
+import { logger } from '@/lib/logger';
 
 // POST /api/trips/[id]/add-place
 // body: { dayIndex: number, activity: Activity }
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest, context: { params: Promise<{ id: st
 
     return Response.json({ success: true, suggestion, trip: { ...trip, itinerary } });
   } catch (err: any) {
-    console.error('[add-place]', err);
-    return Response.json({ error: 'Lỗi: ' + err.message }, { status: 500 });
+    logger.error('Add place to trip error', { error: err?.message, tripId: params.id });
+    return Response.json({ error: 'Không thể thêm địa điểm vào lịch trình do lỗi hệ thống.' }, { status: 500 });
   }
 }

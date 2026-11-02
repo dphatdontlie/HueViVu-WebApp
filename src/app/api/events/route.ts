@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getAuthUserId } from '@/lib/auth';
 import { v4 as uuidv4 } from 'uuid';
+import { logger } from '@/lib/logger';
 
 export async function POST(req: NextRequest) {
   try {
@@ -36,6 +37,7 @@ export async function POST(req: NextRequest) {
 
     return Response.json({ success: true });
   } catch (err: any) {
-    return Response.json({ error: 'Lỗi ghi nhận sự kiện: ' + err.message }, { status: 500 });
+    logger.error('Events recording error', { error: err?.message });
+    return Response.json({ error: 'Ghi nhận sự kiện không thành công do lỗi hệ thống.' }, { status: 500 });
   }
 }

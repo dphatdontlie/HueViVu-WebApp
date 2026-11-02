@@ -4,6 +4,7 @@ import { generateToken } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { getClientIp, checkRateLimit, rateLimitResponse, RATE_LIMIT_RULES } from '@/lib/rate-limit';
+import { logger } from '@/lib/logger';
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,6 +33,7 @@ export async function POST(req: NextRequest) {
     const user = db.prepare('SELECT id, name, email, level, total_trips FROM users WHERE id = ?').get(id);
     return Response.json({ token: generateToken(id), user });
   } catch (err: any) {
-    return Response.json({ error: 'Lỗi đăng ký: ' + err.message }, { status: 500 });
+    logger.error('Registration error', { error: err?.message });
+    return Response.json({ error: 'Đăng ký tài khoản không thành công do lỗi hệ thống. Vui lòng thử lại sau.' }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { v4 as uuidv4 } from 'uuid';
 import { requireAdmin } from '@/lib/auth';
+import { logger } from '@/lib/logger';
 
 const JSON_FIELDS = ['gallery', 'place_ids', 'highlights', 'includes', 'excludes', 'tags'];
 
@@ -43,6 +44,7 @@ export async function POST(req: NextRequest) {
 
     return Response.json({ id, slug });
   } catch (err: any) {
-    return Response.json({ error: err.message }, { status: 500 });
+    logger.error('Tour creation error', { error: err?.message });
+    return Response.json({ error: 'Không thể tạo tour do lỗi hệ thống.' }, { status: 500 });
   }
 }

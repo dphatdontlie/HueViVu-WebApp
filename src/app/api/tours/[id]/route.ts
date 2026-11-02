@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth';
+import { logger } from '@/lib/logger';
 
 const JSON_FIELDS = ['gallery', 'place_ids', 'highlights', 'includes', 'excludes', 'tags'];
 
@@ -57,7 +58,8 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
 
     return Response.json({ ok: true });
   } catch (err: any) {
-    return Response.json({ error: err.message }, { status: 500 });
+    logger.error('Tour update error', { error: err?.message, tourId: params.id });
+    return Response.json({ error: 'Không thể cập nhật tour do lỗi hệ thống.' }, { status: 500 });
   }
 }
 

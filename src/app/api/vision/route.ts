@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getDb } from '@/lib/db';
 import { parsePlaceRow } from '@/lib/place-data';
+import { logger } from '@/lib/logger';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'MISSING_API_KEY');
 
@@ -80,7 +81,7 @@ ${knowledge || 'Chưa có địa điểm gần vị trí này.'}`;
     ]);
     return Response.json({ reply: result.response.text(), nearby: publicPlaces, suggestions, source: 'vision-grounded' });
   } catch (error: any) {
-    console.error('[Vision API Error]', error);
-    return Response.json({ error: 'Live Guide chưa xử lý được ảnh: ' + error.message }, { status: 500 });
+    logger.error('Vision API error', { error: error?.message });
+    return Response.json({ error: 'Live Guide tạm thời chưa xử lý được ảnh do lỗi hệ thống. Vui lòng thử lại sau.' }, { status: 500 });
   }
 }

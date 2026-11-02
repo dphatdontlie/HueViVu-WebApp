@@ -7,6 +7,7 @@ import { requireRoles, getAuthUserId } from '@/lib/auth';
 import { readPreferences, rankPlaces } from '@/lib/travel-preferences';
 import { writeAudit } from '@/lib/audit';
 import { findPlaceDuplicates } from '@/lib/place-duplicates';
+import { logger } from '@/lib/logger';
 
 // GET /api/places
 export async function GET(req: NextRequest) {
@@ -100,7 +101,7 @@ export async function POST(req: NextRequest) {
 
     return Response.json({ id, message: 'Created successfully' }, { status: 201 });
   } catch (error: any) {
-    console.error('Error creating place:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    logger.error('Error creating place', { error: error?.message });
+    return Response.json({ error: 'Không thể tạo địa điểm do lỗi hệ thống.' }, { status: 500 });
   }
 }

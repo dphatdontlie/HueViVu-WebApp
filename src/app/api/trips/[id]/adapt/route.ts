@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db';
 import { getAuthUserId } from '@/lib/auth';
 import { adaptTrip } from '@/lib/trip-adapter';
 import { normalizeTripState, getDayProgress } from '@/lib/trip-state';
+import { logger } from '@/lib/logger';
 
 export async function POST(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   const params = await context.params;
@@ -44,6 +45,7 @@ export async function POST(req: NextRequest, context: { params: Promise<{ id: st
     );
     return Response.json({ success: true, itinerary: result.itinerary, changes: result.changes });
   } catch (error: any) {
-    return Response.json({ error: 'Không thể thích nghi lịch trình: ' + error.message }, { status: 500 });
+    logger.error('Trip adapt error', { error: error?.message, tripId: params.id });
+    return Response.json({ error: 'Không thể thích nghi lịch trình do lỗi hệ thống. Lịch trình hiện tại vẫn được giữ.' }, { status: 500 });
   }
 }

@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db';
 import { getAuthUserId } from '@/lib/auth';
 import { requireAdmin } from '@/lib/auth';
 import { getClientIp, checkRateLimit, rateLimitResponse, RATE_LIMIT_RULES } from '@/lib/rate-limit';
+import { logger } from '@/lib/logger';
 
 export async function POST(req: NextRequest) {
   try {
@@ -43,6 +44,7 @@ export async function GET(req: NextRequest) {
     const rows = db.prepare(`SELECT * FROM feedback ORDER BY created_at DESC`).all();
     return Response.json({ feedback: rows });
   } catch (err: any) {
-    return Response.json({ error: err.message }, { status: 500 });
+    logger.error('Feedback retrieval error', { error: err?.message });
+    return Response.json({ error: 'Không thể tải danh sách phản hồi do lỗi hệ thống.' }, { status: 500 });
   }
 }

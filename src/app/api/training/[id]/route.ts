@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth';
+import { logger } from '@/lib/logger';
 
 export async function GET(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   const params = await context.params;
@@ -12,7 +13,8 @@ export async function GET(req: NextRequest, context: { params: Promise<{ id: str
     if (!example) return Response.json({ error: 'Not found' }, { status: 404 });
     return Response.json(example);
   } catch (error: any) {
-    return Response.json({ error: error.message }, { status: 500 });
+    logger.error('Error getting training example', { error: error?.message, id: params.id });
+    return Response.json({ error: 'Không thể tải dữ liệu huấn luyện do lỗi hệ thống.' }, { status: 500 });
   }
 }
 
@@ -41,8 +43,8 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
 
     return Response.json({ message: 'Updated successfully' });
   } catch (error: any) {
-    console.error('Error updating training example:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    logger.error('Error updating training example', { error: error?.message, id: params.id });
+    return Response.json({ error: 'Không thể cập nhật dữ liệu huấn luyện do lỗi hệ thống.' }, { status: 500 });
   }
 }
 
@@ -55,7 +57,7 @@ export async function DELETE(req: NextRequest, context: { params: Promise<{ id: 
     db.prepare('DELETE FROM training_examples WHERE id = ?').run(params.id);
     return Response.json({ message: 'Deleted successfully' });
   } catch (error: any) {
-    console.error('Error deleting training example:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    logger.error('Error deleting training example', { error: error?.message, id: params.id });
+    return Response.json({ error: 'Không thể xóa dữ liệu huấn luyện do lỗi hệ thống.' }, { status: 500 });
   }
 }

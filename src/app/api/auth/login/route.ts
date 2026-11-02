@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db';
 import { generateToken, isLegacyDemoLoginEnabled } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
 import { getClientIp, checkRateLimit, rateLimitResponse, RATE_LIMIT_RULES } from '@/lib/rate-limit';
+import { logger } from '@/lib/logger';
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,6 +28,7 @@ export async function POST(req: NextRequest) {
     delete safeUser.password_hash;
     return Response.json({ token: generateToken(user.id), user: safeUser });
   } catch (err: any) {
-    return Response.json({ error: 'Lỗi đăng nhập: ' + err.message }, { status: 500 });
+    logger.error('Login error', { error: err?.message });
+    return Response.json({ error: 'Đăng nhập không thành công do lỗi hệ thống. Vui lòng thử lại sau.' }, { status: 500 });
   }
 }
