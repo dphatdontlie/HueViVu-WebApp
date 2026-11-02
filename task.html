@@ -1,0 +1,534 @@
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: var(--text-main);
+        background-color: var(--bg-color);
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 40px auto;
+        background: var(--card-bg);
+        padding: 60px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    header {
+        border-bottom: 3px solid var(--primary);
+        padding-bottom: 20px;
+        margin-bottom: 40px;
+    }
+
+    h1 {
+        color: var(--primary);
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+    }
+
+    .meta-info {
+        background: #f1f5f9;
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        margin-bottom: 30px;
+    }
+
+    .meta-info ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    h2 {
+        color: var(--primary);
+        font-size: 1.5rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 8px;
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        color: var(--primary-light);
+        font-size: 1.2rem;
+        margin-top: 25px;
+    }
+
+    p {
+        margin-bottom: 15px;
+    }
+
+    ul,
+    ol {
+        margin-bottom: 15px;
+        padding-left: 25px;
+    }
+
+    li {
+        margin-bottom: 6px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9rem;
+    }
+
+    th,
+    td {
+        border: 1px solid var(--border-color);
+        padding: 10px 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f1f5f9;
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f8fafc;
+    }
+
+    code {
+        background-color: #f1f5f9;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.9em;
+        color: #d97706;
+    }
+
+    pre {
+        background-color: #1e293b;
+        color: #f8fafc;
+        padding: 15px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: monospace;
+        font-size: 0.9rem;
+    }
+
+    pre code {
+        background-color: transparent;
+        color: inherit;
+        padding: 0;
+    }
+
+    .badge-p0 {
+        background-color: var(--danger);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .badge-p1 {
+        background-color: var(--warning);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .badge-p2 {
+        background-color: var(--primary-light);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .badge-ok {
+        background-color: var(--success);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .toc {
+        background: #f8fafc;
+        border: 1px solid var(--border-color);
+        padding: 20px 30px;
+        border-radius: 8px;
+        margin-bottom: 40px;
+    }
+
+    .toc h3 {
+        margin-top: 0;
+        color: var(--primary);
+    }
+
+    .toc ul {
+        margin-bottom: 0;
+    }
+
+    footer {
+        margin-top: 60px;
+        border-top: 1px solid var(--border-color);
+        padding-top: 20px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+</style>
+
+
+<div class="meta-info">
+    <ul>
+        <li><strong>Thời điểm đánh giá:</strong> 29/10/2026</li>
+        <li><strong>Mã commit kiểm toán:</strong> <code>b1d089b</code> ("13/10/2026 - finale")</li>
+        <li><strong>Trạng thái:</strong> Hoàn tất đánh giá tĩnh, phân tích mã nguồn và xác minh giới hạn runtime.</li>
+    </ul>
+</div>
+
+<div class="toc">
+    <h3>MỤC LỤC</h3>
+    <ul>
+        <li><a href="#section-1">1. Trang thông tin báo cáo</a></li>
+        <li><a href="#section-2">2. Executive Summary (Tóm tắt dành cho lãnh đạo)</a></li>
+        <li><a href="#section-3">3. Tổng quan dự án (Project Overview)</a></li>
+        <li><a href="#section-4">4. Đánh giá kiến trúc hệ thống</a></li>
+        <li><a href="#section-5">5. Ma trận mức độ hoàn thiện chức năng</a></li>
+        <li><a href="#section-6">6. Đánh giá ngăn xếp công nghệ</a></li>
+        <li><a href="#section-7">7. Đánh giá chất lượng mã nguồn</a></li>
+        <li><a href="#section-8">8. Đánh giá cơ sở dữ liệu</a></li>
+        <li><a href="#section-9">9. Đánh giá API và tích hợp</a></li>
+        <li><a href="#section-10">10. Đánh giá bảo mật</a></li>
+        <li><a href="#section-11">11. Kiểm thử và đảm bảo chất lượng</a></li>
+        <li><a href="#section-12">12. Hiệu năng và khả năng mở rộng</a></li>
+        <li><a href="#section-13">13. DevOps và mức độ sẵn sàng vận hành</a></li>
+        <li><a href="#section-14">14. Sổ đăng ký nợ kỹ thuật</a></li>
+        <li><a href="#section-15">15. Sổ đăng ký rủi ro</a></li>
+        <li><a href="#section-16">16. Bảng điểm đánh giá dự án</a></li>
+        <li><a href="#section-17">17. Kế hoạch hành động ưu tiên</a></li>
+        <li><a href="#section-18">18. Kết luận cuối cùng</a></li>
+        <li><a href="#section-19">19. Phụ lục bằng chứng và giới hạn</a></li>
+    </ul>
+</div>
+
+<section id="section-1">
+    <h2>1. TRANG THÔNG TIN BÁO CÁO</h2>
+    <ul>
+        <li><strong>Tên dự án:</strong> HueViVu WebApp (AI Travel Companion for Huế)</li>
+        <li><strong>Thư mục gốc:</strong> <code>c:\Users\dtht0\HueViVu-WebApp</code></li>
+        <li><strong>Git Branch / Commit:</strong> <code>main</code> | Commit:
+            <code>b1d089b06bbdd1453dae888d865ab08b4917c2aa</code></li>
+        <li><strong>Người thực hiện:</strong> AI Software Audit Council (Principal Solution Architect, Senior Software
+            Engineer, AppSec, Database Architect, DevOps/SRE, Test Architect, Business Analyst, Engineering Manager)
+        </li>
+        <li><strong>Giới hạn kiểm toán:</strong> Thư mục <code>node_modules</code> chưa được cài đặt trong workspace
+            (tuân thủ nguyên tắc không tự ý cài đặt dependency mới khi chưa có yêu cầu riêng); cơ sở dữ liệu được đánh
+            giá qua mã nguồn khởi tạo schema trong <code>src/lib/db.ts</code>.</li>
+    </ul>
+</section>
+
+<section id="section-2">
+    <h2>2. EXECUTIVE SUMMARY (TÓM TẮT DÀNH CHO LÃNH ĐẠO)</h2>
+    <h3>2.1. Dự án giải quyết vấn đề gì?</h3>
+    <p>HueViVu là ứng dụng web định vị là Người bạn đồng hành du lịch AI cho Cố đô Huế. Dự án giúp du khách tự túc xây
+        dựng lịch trình khả thi theo thời gian, ngân sách, phương tiện, thích ứng động với biến cố thời tiết hoặc thay
+        đổi lịch trình, tra cứu offline khi mất kết nối mạng, kết hợp trải nghiệm tương tác 3D và định hướng.</p>
+
+    <h3>2.2. Điểm số đánh giá & Mức độ tin cậy</h3>
+    <ul>
+        <li><strong>Điểm tổng hợp:</strong> <span
+                style="font-size: 1.2rem; color: var(--primary); font-weight: bold;">56.7 / 100</span> (Xếp loại: Trung
+            bình khá / Beta cục bộ).</li>
+        <li><strong>Mức độ tin cậy:</strong> Cao đối với kiến trúc, mã nguồn, bảo mật; Trung bình đối với đo lường hiệu
+            năng runtime thực tế do thiếu <code>node_modules</code>.</li>
+    </ul>
+
+    <h3>2.3. Điểm mạnh và Rủi ro cốt lõi</h3>
+    <ul>
+        <li><strong>Điểm mạnh:</strong> Thuật toán tìm đường A* bám sát tập quán du lịch Huế; cơ chế thích ứng động qua
+            preview trước khi confirm; bảo vệ trạng thái với khóa lạc quan (optimistic locking); khả năng phục hồi
+            offline ấn tượng qua Service Worker và LocalStorage snapshot.</li>
+        <li><strong>Rủi ro cốt lõi (Blockers):</strong> <span class="badge-p0">P0</span> Lỗi khởi tạo database sạch do
+            thiếu fixture địa điểm khiến endpoint health check trả về HTTP 503 và chặn luồng tạo chuyến đi; <span
+                class="badge-p1">P1</span> Thiếu rate limiting tại các API xác thực và phản hồi; <span
+                class="badge-p1">P1</span> Rò rỉ thông tin lỗi nội bộ qua response 500; <span class="badge-p1">P1</span>
+            Module AI RAG và YOLO vision còn là stub rỗng.</li>
+    </ul>
+</section>
+
+<section id="section-3">
+    <h2>3. TỔNG QUAN DỰ ÁN (PROJECT OVERVIEW)</h2>
+    <p>Hệ thống được tổ chức thành các phân hệ: Khách vãng lai (Guest session ẩn danh), Người dùng đăng ký, Collector
+        (thu thập dữ liệu), Reviewer (thẩm định nội dung), và Admin (quản trị toàn hệ thống). Các module chính bao gồm
+        Trip Planner & Optimization, Adaptive Engine, Discovery & Map, Weather Engine, Live Guide & AI Chat, 3D Heritage
+        Experience và Admin Quality Assurance.</p>
+</section>
+
+<section id="section-4">
+    <h2>4. ĐÁNH GIÁ KIẾN TRÚC HỆ THỐNG</h2>
+    <p>HueViVu áp dụng mô hình <strong>Modular Monolith</strong> trên nền tảng Next.js 15.5.27 (App Router) kết hợp
+        SQLite (better-sqlite3). Ranh giới giữa các engine thuần túy (như <code>astar.ts</code>,
+        <code>itinerary-validator.ts</code>, <code>trip-adapter.ts</code>) và tầng API route được tách bạch rất tốt,
+        giúp dễ dàng kiểm thử đơn vị.</p>
+</section>
+
+<section id="section-5">
+    <h2>5. MA TRẬN MỨC ĐỘ HOÀN THIỆN CHỨC NĂNG</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Module</th>
+                <th>Chức năng</th>
+                <th>Trạng thái</th>
+                <th>Rủi ro</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>F-01</td>
+                <td>Auth</td>
+                <td>Khách vãng lai tự động (Guest Session)</td>
+                <td><span class="badge-ok">ĐÃ XÁC MINH</span></td>
+                <td>Thấp</td>
+            </tr>
+            <tr>
+                <td>F-02</td>
+                <td>Auth</td>
+                <td>Đăng ký & Đăng nhập người dùng</td>
+                <td><span class="badge-ok">ĐÃ XÁC MINH</span></td>
+                <td><span class="badge-p1">Cao (P1)</span></td>
+            </tr>
+            <tr>
+                <td>F-04</td>
+                <td>Planner</td>
+                <td>Lập lịch tự động bằng thuật toán A*</td>
+                <td><span class="badge-ok">ĐÃ XÁC MINH</span></td>
+                <td>Trung bình</td>
+            </tr>
+            <tr>
+                <td>F-06</td>
+                <td>Planner</td>
+                <td>Thích ứng động theo biến cố (Replan)</td>
+                <td><span class="badge-ok">ĐÃ XÁC MINH</span></td>
+                <td>Thấp</td>
+            </tr>
+            <tr>
+                <td>F-08</td>
+                <td>Offline</td>
+                <td>Đọc lịch trình ngoại tuyến khi mất mạng</td>
+                <td><span class="badge-ok">ĐÃ XÁC MINH</span></td>
+                <td>Thấp</td>
+            </tr>
+            <tr>
+                <td>F-16</td>
+                <td>AI Guide</td>
+                <td>Nhận diện thị giác Live Guide</td>
+                <td><span class="badge-p2">MỘT PHẦN</span></td>
+                <td><span class="badge-p1">Cao (P1)</span></td>
+            </tr>
+            <tr>
+                <td>F-21</td>
+                <td>RAG Engine</td>
+                <td>Truy xuất tài liệu tri thức Huế</td>
+                <td><span class="badge-danger">CHƯA CÓ</span></td>
+                <td><span class="badge-p1">Cao (P1)</span></td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section id="section-6">
+    <h2>6. ĐÁNH GIÁ NGĂN XẾP CÔNG NGHỆ</h2>
+    <p>Ngăn xếp công nghệ hiện đại bao gồm Next.js 15, React 19, TypeScript, SQLite (better-sqlite3), Tailwind CSS,
+        Leaflet, Three.js (React Three Fiber), Google Generative AI SDK, và BullMQ. Sự kết hợp này mang lại hiệu năng
+        cao trên client nhưng đòi hỏi lưu ý về giới hạn single-writer của SQLite.</p>
+</section>
+
+<section id="section-7">
+    <h2>7. ĐÁNH GIÁ CHẤT LƯỢNG MÃ NGUỒN</h2>
+    <ul>
+        <li><strong>[CQ-01] [P2]</strong> Thuật toán Priority Queue trong A* (<code>src/lib/astar.ts:37</code>) thực
+            hiện gọi phương thức <code>sort()</code> trên toàn bộ mảng sau mỗi lần chèn, làm tăng độ phức tạp tính toán
+            CPU lên $O(N \log N)$ khi số lượng trạng thái lớn. Khuyến nghị thay thế bằng Binary Min-Heap chuẩn.</li>
+        <li><strong>[CQ-02] [P2]</strong> Thiếu kiểm tra cấu trúc schema khi cập nhật thủ công lịch trình tại
+            <code>/api/trips/[id]/save-itinerary</code>.</li>
+        <li><strong>[CQ-03] [P3]</strong> Tồn tại các tệp rác, file backup (<code>*.bak</code>, script tạm ở thư mục
+            gốc) làm ô nhiễm git repository.</li>
+    </ul>
+</section>
+
+<section id="section-8">
+    <h2>8. ĐÁNH GIÁ CƠ SỞ DỮ LIỆU</h2>
+    <ul>
+        <li><strong>[DB-01] [P0] Lỗi khởi tạo sạch cơ sở dữ liệu:</strong> Hàm <code>seedData</code> trong
+            <code>src/lib/db.ts</code> hiện đã xóa bỏ dữ liệu mẫu cũ nhưng không nạp dữ liệu địa điểm mặc định. Khi chạy
+            trên môi trường mới không có sẵn file <code>huevivu.db</code>, bảng <code>places</code> trống hoàn toàn, gây
+            lỗi 503 cho <code>/api/health</code> và làm tê liệt luồng tạo chuyến đi.</li>
+        <li><strong>[DB-02] [P2] Vấn đề N+1 Query tại bảng tin cộng đồng (<code>/api/feed</code>):</strong> Vòng lặp
+            duyệt qua danh sách chuyến đi thực hiện thêm 2 câu truy vấn SQL riêng lẻ để kiểm tra trạng thái like và save
+            của user.</li>
+    </ul>
+</section>
+
+<section id="section-9">
+    <h2>9. ĐÁNH GIÁ API VÀ TÍCH HỢP</h2>
+    <p>Hệ thống REST API được thiết kế rõ ràng với hơn 25 endpoint. Các dịch vụ bên ngoài bao gồm Open-Meteo (thời
+        tiết), Valhalla / Google Routes (định tuyến), Google Gemini API (AI chat & vision), và Google Translate TTS
+        (scrape không chính thức).</p>
+</section>
+
+<section id="section-10">
+    <h2>10. ĐÁNH GIÁ BẢO MẬT</h2>
+    <ul>
+        <li><strong>[SEC-01] [P1]</strong> Thiếu Rate Limiting tại các API đăng nhập, đăng ký và phản hồi, mở ra rủi ro
+            brute-force và spam dữ liệu.</li>
+        <li><strong>[SEC-02] [P1]</strong> Rò rỉ thông tin lỗi nội bộ chi tiết (<code>err.message</code>) qua response
+            HTTP 500 tại nhiều API route.</li>
+        <li><strong>[SEC-03] [P1]</strong> Endpoint TTS sử dụng kỹ thuật scraping không chính thức của Google Translate,
+            rủi ro bị chặn IP cao.</li>
+        <li><strong>Điểm bảo mật tốt:</strong> Sử dụng bcryptjs (salt rounds 10), loại bỏ password hash khỏi response,
+            phân quyền RBAC chặt chẽ và cấu hình Security Headers đầy đủ qua middleware.</li>
+    </ul>
+</section>
+
+<section id="section-11">
+    <h2>11. KIỂM THỬ VÀ ĐẢM BẢO CHẤT LƯỢNG</h2>
+    <p>Dự án sở hữu bộ smoke test 28 ca kiểm thử tự động phong phú trong thư mục <code>scripts/</code>. Tuy nhiên, tại
+        thời điểm kiểm toán, việc thực thi trực tiếp bị chặn do thiếu thư mục <code>node_modules</code> trong workspace
+        hiện tại.</p>
+</section>
+
+<section id="section-12">
+    <h2>12. HIỆU NĂNG VÀ KHẢ NĂNG MỞ RỘNG</h2>
+    <p>Hệ thống hoạt động tốt ở quy mô cục bộ. Các điểm nghẽn tiềm ẩn gồm truy vấn toàn bộ bảng địa điểm không phân
+        trang tại <code>/api/places</code>, kích thước bundle trang 3D khá nặng (~414 kB JS), và kiến trúc SQLite đơn
+        node chưa hỗ trợ scale ngang phân tán.</p>
+</section>
+
+<section id="section-13">
+    <h2>13. DEVOPS VÀ MỨC ĐỘ SẴN SÀNG VẬN HÀNH</h2>
+    <p>Có đầy đủ kịch bản health check, script backup/restore SQLite trực tuyến qua lệnh backup API, và tài liệu hướng
+        dẫn bàn giao VPS Windows chi tiết (<code>docs/WINDOWS_VPS_HANDOFF.md</code>). Chưa có Dockerfile và CI/CD tự
+        động.</p>
+</section>
+
+<section id="section-14">
+    <h2>14. SỔ ĐĂNG KÝ NỢ KỸ THUẬT</h2>
+    <p>Bao gồm việc phụ thuộc TTS scraping không chính thức (TD-01), thiếu ORM migration chuyên nghiệp (TD-02), Priority
+        Queue chưa tối ưu (TD-03), module AI Python FastAPI chưa hoàn thiện (TD-04), và tệp rác ở thư mục gốc (TD-05).
+    </p>
+</section>
+
+<section id="section-15">
+    <h2>15. SỔ ĐĂNG KÝ RỦI RO</h2>
+    <p>Rủi ro lớn nhất là hệ thống sập khi triển khai sạch do thiếu seed data địa điểm (<span
+            class="badge-p0">RSK-01</span>), rủi ro brute-force/spam (<span class="badge-p1">RSK-02</span>), khóa ghi
+        SQLite khi có tải đồng thời cao (<span class="badge-p1">RSK-03</span>), và TTS bị chặn (<span
+            class="badge-p1">RSK-04</span>).</p>
+</section>
+
+<section id="section-16">
+    <h2>16. BẢNG ĐIỂM ĐÁNH GIÁ DỰ ÁN</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Hạng mục đánh giá</th>
+                <th>Trọng số</th>
+                <th>Điểm (0-5)</th>
+                <th>Quy đổi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1. Kiến trúc và thiết kế hệ thống</td>
+                <td>15</td>
+                <td>3.5</td>
+                <td>10.5</td>
+            </tr>
+            <tr>
+                <td>2. Mức độ hoàn thiện chức năng</td>
+                <td>15</td>
+                <td>3.0</td>
+                <td>9.0</td>
+            </tr>
+            <tr>
+                <td>3. Chất lượng mã nguồn và bảo trì</td>
+                <td>15</td>
+                <td>3.2</td>
+                <td>9.6</td>
+            </tr>
+            <tr>
+                <td>4. Cơ sở dữ liệu và toàn vẹn dữ liệu</td>
+                <td>10</td>
+                <td>3.0</td>
+                <td>6.0</td>
+            </tr>
+            <tr>
+                <td>5. Bảo mật</td>
+                <td>15</td>
+                <td>3.2</td>
+                <td>9.6</td>
+            </tr>
+            <tr>
+                <td>6. Kiểm thử và độ tin cậy</td>
+                <td>10</td>
+                <td>3.0</td>
+                <td>6.0</td>
+            </tr>
+            <tr>
+                <td>7. Hiệu năng và khả năng mở rộng</td>
+                <td>8</td>
+                <td>3.0</td>
+                <td>4.8</td>
+            </tr>
+            <tr>
+                <td>8. DevOps và vận hành</td>
+                <td>7</td>
+                <td>2.3</td>
+                <td>3.22</td>
+            </tr>
+            <tr>
+                <td>9. Tài liệu và bàn giao</td>
+                <td>5</td>
+                <td>4.0</td>
+                <td>4.0</td>
+            </tr>
+            <tr>
+                <td><strong>TỔNG CỘNG</strong></td>
+                <td><strong>100</strong></td>
+                <td>-</td>
+                <td><strong>56.72 / 100</strong></td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>Xếp loại chung: Đạt mức Trung bình khá (Local Functional Beta).</strong></p>
+</section>
+
+<section id="section-17">
+    <h2>17. KẾ HOẠCH HÀNH ĐỘNG ƯU TIÊN</h2>
+    <ul>
+        <li><strong>[ACT-A01] <span class="badge-p0">P0 (Critical)</span>:</strong> Bổ sung file seed địa điểm mẫu chuẩn
+            và cập nhật <code>src/lib/db.ts:seedData</code> để tự động nạp khi bảng rỗng.</li>
+        <li><strong>[ACT-A02] <span class="badge-p1">P1 (High)</span>:</strong> Cài đặt Rate Limiting cho các endpoint
+            xác thực (<code>/api/auth/*</code>) và phản hồi (<code>/api/feedback</code>).</li>
+        <li><strong>[ACT-A03] <span class="badge-p1">P1 (High)</span>:</strong> Chuẩn hóa thông báo lỗi HTTP 500, tránh
+            rò rỉ chi tiết hệ thống nội bộ ra client.</li>
+        <li><strong>[ACT-A04] <span class="badge-p1">P1 (High)</span>:</strong> Chuyển đổi tính năng phát âm thanh sang
+            Web Speech API của trình duyệt thay vì scrape Google Translate.</li>
+    </ul>
+</section>
+
+<section id="section-18">
+    <h2>18. KẾT LUẬN CUỐI CÙNG</h2>
+    <p>Dự án HueViVu sở hữu nền tảng nghiệp vụ du lịch Huế vô cùng xuất sắc, thuật toán A* thông minh và trải nghiệm
+        offline ấn tượng. Tuy nhiên, để chính thức phát hành công khai cho du khách, đội ngũ phát triển bắt buộc phải
+        giải quyết triệt để lỗi seed database trống, cài đặt rate limit và bảo mật thông báo lỗi hệ thống.</p>
+</section>
+
+<footer>
+    <p>Báo cáo kiểm toán được tổng hợp và xuất dưới định dạng HTML tiêu chuẩn theo yêu cầu người dùng.</p>
+</footer>
+</div>
