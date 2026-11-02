@@ -3,9 +3,16 @@ import { getDb } from '@/lib/db';
 import { generateToken } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
+import { getClientIp, checkRateLimit, rateLimitResponse, RATE_LIMIT_RULES } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const rateCheck = checkRateLimit(`register:${ip}`, RATE_LIMIT_RULES.AUTH_REGISTER.limit, RATE_LIMIT_RULES.AUTH_REGISTER.windowMs);
+    if (!rateCheck.success) {
+      return rateLimitResponse(rateCheck, `Bạn đã tạo tài khoản quá nhiều lần. Vui lòng thử lại sau ${rateCheck.retryAfterSeconds} giây.`);
+    }
+
     const { name, email, password } = await req.json();
     if (typeof name !== 'string' || typeof email !== 'string' || typeof password !== 'string' || !name || !email || !password || name.length > 100 || email.length > 254 || password.length > 256) return Response.json({ error: 'Hãy nhập tên, email và mật khẩu hợp lệ.' }, { status: 400 });
     const normalizedEmail = String(email).trim().toLowerCase();

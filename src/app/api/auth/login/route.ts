@@ -2,9 +2,16 @@ import { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { generateToken, isLegacyDemoLoginEnabled } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
+import { getClientIp, checkRateLimit, rateLimitResponse, RATE_LIMIT_RULES } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const rateCheck = checkRateLimit(`login:${ip}`, RATE_LIMIT_RULES.AUTH_LOGIN.limit, RATE_LIMIT_RULES.AUTH_LOGIN.windowMs);
+    if (!rateCheck.success) {
+      return rateLimitResponse(rateCheck, `Bạn đã thử đăng nhập quá nhiều lần. Vui lòng thử lại sau ${rateCheck.retryAfterSeconds} giây.`);
+    }
+
     const { email, password } = await req.json();
     if (typeof email !== 'string' || typeof password !== 'string' || !email || !password || email.length > 254 || password.length > 256) return Response.json({ error: 'Hãy nhập email và mật khẩu hợp lệ.' }, { status: 400 });
 

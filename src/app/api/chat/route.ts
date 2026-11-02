@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { suggestTripInsertion } from '@/lib/trip-insertion';
 import { normalizeTripState } from '@/lib/trip-state';
 import { progressReply } from '@/lib/trip-chat-progress';
+import { getClientIp, checkRateLimit, rateLimitResponse, RATE_LIMIT_RULES } from '@/lib/rate-limit';
 
 function fold(value = '') {
   return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'd').toLowerCase();
@@ -93,12 +94,20 @@ function summarizeChanges(before: any, after: any) {
 // POST /api/chat
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const userId = getAuthUserId(req);
+    const rateKey = userId ? `chat:user:${userId}` : `chat:ip:${ip}`;
+    const rateCheck = checkRateLimit(rateKey, RATE_LIMIT_RULES.CHAT.limit, RATE_LIMIT_RULES.CHAT.windowMs);
+    if (!rateCheck.success) {
+      return rateLimitResponse(rateCheck, `Bạn đã gửi quá nhiều tin nhắn cho trợ lý AI. Vui lòng đợi ${rateCheck.retryAfterSeconds} giây trước khi gửi tiếp.`);
+    }
+
     const body = await req.json().catch(() => null);
     if (!body || typeof body !== 'object' || Array.isArray(body)) return Response.json({ error: 'Tin nhắn chưa hợp lệ.' }, { status: 400 });
     const { message, tripId, history = [], dayIndex } = body;
     if (typeof message !== 'string' || !message.trim() || message.length > 2000 || (tripId !== undefined && (typeof tripId !== 'string' || !tripId || tripId.length > 200)) || !Array.isArray(history) || history.length > 20 || history.some((item: any) => !item || !['user', 'assistant'].includes(item.role) || typeof item.content !== 'string' || item.content.length > 4000) || (dayIndex !== undefined && (!Number.isInteger(dayIndex) || dayIndex < 0 || dayIndex > 6))) return Response.json({ error: 'Tin nhắn hoặc ngày đang xem chưa hợp lệ.' }, { status: 400 });
 
-    const userId = getAuthUserId(req);
+    // userId đã được khai báo và kiểm tra ở đầu hàm
     const db = getDb();
     let tripContext: any = null;
 
